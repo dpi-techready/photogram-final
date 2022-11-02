@@ -1,0 +1,75 @@
+<div>
+  <div>
+    <h1>
+      List of users
+    </h1>
+  </div>
+</div>
+
+
+<div>
+  <div>
+    <table border="1">
+      <tr>
+        <th>
+          Username
+        </th>
+
+    <th>
+      Private?
+    </th>
+
+    <th></th>
+
+    <% if @current_user != nil %>
+    <th></th>
+    <% end %>
+
+  </tr>
+
+    <tr>
+    <% @list_of_users.each do |a_user| %>
+      <td>
+        <%= a_user.username %>
+      </td>
+
+      <td>
+        <%= humanize_boolean(a_user.private) %>
+      </td>
+      <!-- not sure how to do a conditional for the follow button vs the request sent notification and Cancel link -->
+      <!-- bring follow requests from user to index page and render -->
+     <% if @current_user != nil %>
+      <td>
+        <form action="/insert_follow_request" method="post">
+          <input type="hidden" id="recipient_id_box" name="query_recipient_id" value="<% a_user.id %>">
+
+          <input type="hidden" id="sender_id_box" name="query_sender_id" value="<% @current_user.id %>">
+
+          <%# follow_request = FollowRequest.where({ :status => a_user })%>
+          <%# follow_request.each do |a_follow_request| %>
+          <%# f = FollowRequest.where({ :status => a_user.id }).at(0) %>
+          <input type="hidden" id="status_box" name="query_status" value="pending">
+
+          <button>
+            Follow
+          </button>
+        </form>
+      </td>
+      <% end %>
+    <!-- elseif right here -->
+      <!--<td>
+        Request sent.
+
+        <a href="/delete_follow_request/<%# request ID here %>">
+          Cancel
+        </a>
+      </td>-->
+
+      <!-- need conditional that redirects a user back to users page with error message if they clicked on is status: private = true -->
+      <td>
+        <a href="/users/<%= a_user.id %>">Show details</a>
+      </td>
+    </tr>
+      <% end %>
+  </div>  
+</div> 

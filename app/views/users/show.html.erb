@@ -1,0 +1,123 @@
+<h1><%= @the_user.username %></h1>
+
+<dl>
+  <dt>Private</dt>
+  <dd><%= @the_user.private %></dd>
+
+  <dt>Followers</dt>
+  <dd>
+    0
+    <div>
+      <a href="/delete_follow_request/<%# follow request ID %>">Unfollow</a>
+    </div>
+    <!--</div>
+
+      <h4>Pending follow requests</h4>
+
+      <ul>
+      </ul>-->
+  </dd>
+
+  <dt>Following</dt>
+  <dd>0</dd>
+
+  <hr>
+  <% if @current_user == @the_user %>
+  <dt>Edit user</dt>
+  <dd>
+    <form action="/modify_user/#{<% @the_user.username %>}" method="post">
+      <label for="browser_username">Username</label>
+      <input id="browser_username" type="text" name="query_username" placeholder="Enter a username..."
+        value="<%= @the_user.username %>">
+
+      <label for="browser_private">Private?</label>
+      <input id="browser_private" type="checkbox" name="query_private" >
+
+      <button>Update user</button>
+    </form>
+  </dd>
+</dl>
+
+<hr>
+<% end %>
+
+<nav>
+  <ul>
+    <li>
+      <a href="/users/<%= @the_user.id %>">Profile</a>
+    </li>
+    <li>
+      <a href="/users/<%= @the_user.id %>/liked_photos">Liked photos</a>
+    </li>
+    <li>
+      <a href="/users/<%= @the_user.id %>/feed">Feed</a>
+    </li>
+    <li>
+      <a href="/users/<%= @the_user.id %>/discover">Discover</a>
+    </li>
+  </ul>
+</nav>
+
+<h2>Own photos (0)</h2>
+
+<table border="1">
+  <tr>
+    <th>
+      Image
+    </th>
+
+    <th>
+      Owner
+    </th>
+
+    <th>
+      Caption
+    </th>
+
+    <th>
+      Posted
+    </th>
+
+    <th>
+      Likes
+    </th>
+
+    <th></th>
+  </tr>
+
+
+  <tr>
+      <!-- bring photos to user pages and render -->
+      <% the_photos = Photo.where({ :owner_id => @the_user.id })%>
+      <% the_photos.each do |a_photo| %>
+    <td>
+      <img src="<%= a_photo.image %>">
+    </td>
+
+    <td>
+      <%= @the_user.username %>
+    </td>
+
+    <td>
+      <%= a_photo.caption %>
+    </td>
+
+    <td>
+      <%= time_ago_in_words(a_photo.created_at) %>
+    </td>
+
+    <td>
+      <%= a_photo.likes_count %>
+    </td>
+
+    <td>
+      <a href="/photos/<% a_photo.id %>">
+        Show details
+      </a>
+    </td>
+  </tr>
+<% end %>
+</table>
+
+  </body>
+</html>
