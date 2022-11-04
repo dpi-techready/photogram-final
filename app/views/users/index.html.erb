@@ -37,8 +37,9 @@
         <%= humanize_boolean(a_user.private) %>
       </td>
 
+    <% if @current_user != nil %>
     <!-- bring data from follow request to render here -->
-    <% matching_follow_requests = FollowRequest.where({ :sender_id => @current_user.id }).where({ :recipient_id => a_user.id})%>
+    <% matching_follow_requests = FollowRequest.where({ :sender_id => @current_user.id }).where({ :recipient_id => a_user.id })%>
     <!-- narrow down to the specific request -->
     <% a_follow_request = matching_follow_requests.at(0) %>
     <!-- check if there is a current user, a follow request and what the status is on that follow request -->
@@ -49,7 +50,7 @@
 
           <input type="hidden" id="sender_id_box" name="query_sender_id" value="<%= @current_user.id %>">
 
-          <input type="hidden" id="status_box" name="query_status" value="nil">
+          <input type="hidden" id="status_box" name="query_status" value="pending">
 
           <button>
             Follow
@@ -76,6 +77,7 @@
       </td>
 
     <% end %>
+  <% end %>  
 
       <td>
         <a href="/users/<%= a_user.id %>">Show details</a>
