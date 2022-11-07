@@ -32,7 +32,7 @@
           </li>
           <% else %>
           <li>
-            <a href="/edit_user_profile/#{<% @current_user.id %>}"><%= @current_user.username %></a>
+            <a href="/edit_user_profile/<% @current_user.id %>"><%= @current_user.username %></a>
           </li>
           <li>
             <a href="/user_sign_out">Sign out</a>

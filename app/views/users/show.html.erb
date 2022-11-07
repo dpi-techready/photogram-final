@@ -5,11 +5,32 @@
   <dd><%= @the_user.private %></dd>
 
   <dt>Followers</dt>
+  <dd>0</dd>
   <dd>
-    0
+    <!-- bring data from follow request to render here -->
+    <% matching_follow_requests = FollowRequest.where({ :sender_id => @current_user.id }).where({ :recipient_id => @the_user.id })%>
+    <!-- narrow down to the specific request -->
+    <% a_follow_request = matching_follow_requests.at(0) %>
+
+    <% if @current_user != nil && !a_follow_request %>  
     <div>
-      <a href="/delete_follow_request/<%# follow request ID %>">Unfollow</a>
+    <form action="/insert_follow_request" method="post">
+      <input type="hidden" id="recipient_id_box" name="query_recipient_id" value="<%= @the_user.id %>">
+
+      <input type="hidden" id="sender_id_box" name="query_sender_id" value="<%= @current_user.id %>">
+
+      <input type="hidden" id="status_box" name="query_status" value="pending">
+
+      <button>
+        Follow
+      </button>
+    </form>
     </div>
+    <% else %>
+    <div>
+      <a href="/delete_follow_request/<%= a_follow_request.id %>">Unfollow</a>
+    </div>
+    <% end %>
     <!--</div>
 
       <h4>Pending follow requests</h4>
@@ -89,6 +110,7 @@
   <tr>
       <!-- bring photos to user pages and render -->
       <% the_photos = Photo.where({ :owner_id => @the_user.id })%>
+      <!-- iterate over all photos -->
       <% the_photos.each do |a_photo| %>
     <td>
       <img src="<%= a_photo.image %>">
