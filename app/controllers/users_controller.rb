@@ -21,7 +21,10 @@ class UsersController < ApplicationController
     # narrow down to the specific request
     a_follow_request = matching_follow_requests.at(0)
 
-  if @the_user.private == true && !a_follow_request
+  if @the_user.private == true && @current_user.username == @the_user.username
+    render({ :template => "users/show.html.erb" })
+
+  elsif @the_user.private == true && !a_follow_request
     redirect_to("/", { :alert => "You're not authorized for that." })
 
   elsif @the_user.private == true && a_follow_request == nil 
@@ -35,7 +38,7 @@ class UsersController < ApplicationController
 
   elsif @the_user.private == false && !a_follow_request
     render({ :template => "users/show.html.erb" })
-
+    
   elsif  @the_user.private == false && a_follow_request.status == "rejected"
     redirect_to("/", { :alert => "You're not authorized for that." })  
 
