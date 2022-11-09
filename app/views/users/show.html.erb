@@ -4,20 +4,25 @@
   <dt>Private</dt>
   <dd><%= @the_user.private %></dd>
 
-  <!-- bring data from accepted followers requests -->
+  <!-- bring data from accepted followers requests (recipient) -->
   <% accepted_followers = FollowRequest.where({ :recipient_id => @the_user.id, :status => "accepted" }) %>
 
   <dt>Followers</dt>
   <dd><%= accepted_followers.count %></dd>
 
   <!-- bring data from follow request to render here -->
-  <% matching_follow_requests = FollowRequest.where({ :sender_id => @current_user.id , :recipient_id => @the_user.id }) %>
+  <%# matching_follow_requests = FollowRequest.where({ :sender_id => @current_user.id , :recipient_id => @the_user.id }) %>
   <!-- narrow down to the specific request -->
-  <% a_follow_request = matching_follow_requests.at(0) %>  
+  <%# a_follow_request = matching_follow_requests.at(0) %>
+
+  <!-- bring data from pending followers requests -->
+  <%# pending_followers = FollowRequest.where({ :sender_id => @the_user.id, :status => "pending" }) %>
+
+  <% received_request_status = FollowRequest.where({ :recipient_id => @the_user.id, :sender_id => @current_user, :status => "accepted" }) %>
 
   <dd>
+  <% if received_request_status.empty? %> 
 
-  <% if !a_follow_request %> 
     <div>
     <form action="/insert_follow_request" method="post">
       <input type="hidden" id="recipient_id_box" name="query_recipient_id" value="<%= @the_user.id %>">
@@ -32,24 +37,27 @@
     </form>
     </div>
 
-  <% elsif a_follow_request.status == "accepted" %>  
+  <% else %>  
 
     <div>
-      <a href="/delete_follow_request/<%= a_follow_request.id %>">Unfollow</a>
+      <a href="/delete_follow_request/<%= received_request_status.at(0).id %>">Unfollow</a>
     </div>
 
-  <% elsif a_follow_request.status == "pending" %>   
+  <% end %>  
+
+  <% if @current_user == @the_user %>   
 
     <div>
       <h4>Pending follow requests</h4>
 
       <ul>
+    <% pending_followers = FollowRequest.where({ :recipient_id => @the_user.id, :status => "pending" }) %>  
     <!-- iterate through pending requests -->  
-    <% matching_follow_requests.each do |a_request| %>
+    <% pending_followers.each do |pending| %>
           <li>
             <!-- bring username under request -->
-            <%= a_request.id %>
-            <form action="/modify_follow_request/<%= a_request.id %>" method="post">
+            <%= pending.id %>
+            <form action="/modify_follow_request/<%= pending.id %>" method="post">
               <input name="query_status" value="accepted" type="hidden">
 
               <button>
@@ -57,7 +65,7 @@
               </button>
             </form>
 
-            <form action="/modify_follow_request/<%= a_request.id %>" method="post">
+            <form action="/modify_follow_request/<%= pending.id %>" method="post">
               <input name="query_status" value="rejected" type="hidden">
             
               <button>
@@ -71,7 +79,7 @@
   <% end %>  
   </dd>
 
-  <!-- bring data from accepted following requests -->                       
+  <!-- bring data from accepted following requests (sender) -->                       
   <% following_accepted = FollowRequest.where({ :sender_id => @the_user.id, :status => "accepted" }) %>
 
   <dt>Following</dt>
@@ -115,10 +123,14 @@
   </ul>
 </nav>
 
-<!-- bring number of own photos -->
-<h2>Own photos (0)</h2>
+
+<!-- bring photos to user pages and render -->
+<% the_photos = Photo.where({ :owner_id => @the_user.id })%>
+
+<h2>Own photos (<%= the_photos.count %>)</h2>
 
 <table border="1">
+
   <tr>
     <th>
       Image
@@ -143,10 +155,9 @@
     <th></th>
   </tr>
 
-    <!-- bring photos to user pages and render -->
-    <% the_photos = Photo.where({ :owner_id => @the_user.id })%>
-    <!-- iterate over all photos -->
-    <% the_photos.each do |a_photo| %>
+<!-- iterate over all photos -->
+<% the_photos.each do |a_photo| %>
+
   <tr>
 
     <td>
