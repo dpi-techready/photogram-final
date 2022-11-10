@@ -64,7 +64,10 @@ Rails.application.routes.draw do
   # READ
   get("/users", { :controller => "users", :action => "index" })
 
-  get("/users/:path_id", { :controller => "users", :action => "show" })
+  #get("/users/:path_id", { :controller => "users", :action => "show" })
+
+  # changed url to point at user names instead of id
+  get("/users/:path_username", { :controller => "users", :action => "show" })
 
   # SIGN UP FORM
   get("/user_sign_up", { :controller => "user_authentication", :action => "sign_up_form" })        

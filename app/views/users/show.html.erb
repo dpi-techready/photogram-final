@@ -106,16 +106,16 @@
 <nav>
   <ul>
     <li>
-      <a href="/users/<%= @the_user.id %>">Profile</a>
+      <a href="/users/<%= @the_user.username %>">Profile</a>
     </li>
     <li>
-      <a href="/users/<%= @the_user.id %>/liked_photos">Liked photos</a>
+      <a href="/users/<%= @the_user.username %>/liked_photos">Liked photos</a>
     </li>
     <li>
-      <a href="/users/<%= @the_user.id %>/feed">Feed</a>
+      <a href="/users/<%= @the_user.username %>/feed">Feed</a>
     </li>
     <li>
-      <a href="/users/<%= @the_user.id %>/discover">Discover</a>
+      <a href="/users/<%= @the_user.username %>/discover">Discover</a>
     </li>
   </ul>
 </nav>
@@ -178,7 +178,7 @@
     </td>
 
     <td>
-      <a href="/photos/<% a_photo.id %>">Show details</a>
+      <a href="/photos/<%= a_photo.id %>">Show details</a>
     </td>
 
     <% end %>

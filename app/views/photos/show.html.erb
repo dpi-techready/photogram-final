@@ -39,6 +39,7 @@
         Owner
       </dt>
       <dd>
+      <!-- bring owner user name -->
       <% u = User.where({ :id => @the_photo.owner_id }).at(0) %>
         <%= u.username %>
       </dd>
@@ -68,6 +69,7 @@
         Fans
       </dt>
       <!-- bring fans/likes from table to pull user names for likes -->
+      <%# u = User.where({ :id => @the_likes.owner_id }).at(0) %>
       <dd>
         <%#= fans.username %>
       </dd>
