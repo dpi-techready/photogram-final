@@ -12,4 +12,7 @@
 #  owner_id       :integer
 #
 class Photo < ApplicationRecord
+
+  # Uploader line / Leave last
+  mount_uploader :image, ImageUploader
 end
