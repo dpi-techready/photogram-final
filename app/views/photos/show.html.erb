@@ -68,11 +68,17 @@
       <dt>
         Fans
       </dt>
+    <!-- bring likes for this photo -->  
+    <% photo_likes = Like.where({ :photo_id => @the_photo.id }) %>  
+    <!-- iterate through liked photos -->  
+    <% photo_likes.each do |a_liked_photo| %>
+
       <!-- bring fans/likes from table to pull user names for likes -->
-      <%# u = User.where({ :id => @the_likes.owner_id }).at(0) %>
+      <% fan = User.where({ :id => a_liked_photo.fan_id }).at(0) %>
       <dd>
-        <%#= fans.username %>
+        <%= fan.username %>
       </dd>
+      <% end %>
     </dl>
   </div>
 </div>

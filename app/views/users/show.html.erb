@@ -45,6 +45,7 @@
       <h4>Pending follow requests</h4>
 
       <ul>
+    <!-- bring pending followers to render -->  
     <% pending_followers = FollowRequest.where({ :recipient_id => @the_user.id, :status => "pending" }) %>  
     <!-- iterate through pending requests -->  
     <% pending_followers.each do |pending| %>
