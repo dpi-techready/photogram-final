@@ -4,22 +4,6 @@
       Photo Details
     </h1>
 
-    <!--<div>
-      <div>
-        <a href="/photos">
-          Go back
-        </a>
-      </div>
-
-      <% if @current_user != nil %>
-      <div>
-        <a href="/delete_photo/<%= @the_photo.id %>">
-          Delete photo
-        </a>
-      </div>
-    </div>
-    <% end %>-->
-
     <dl>
       <dt>
         Image
@@ -40,8 +24,8 @@
       </dt>
       <dd>
       <!-- bring owner user name -->
-      <% u = User.where({ :id => @the_photo.owner_id }).at(0) %>
-        <%= u.username %>
+      <% photo_owner = User.where({ :id => @the_photo.owner_id }).at(0) %>
+        <%= photo_owner.username %>
       </dd>
 
       <dt>
@@ -106,10 +90,9 @@
 </div>
 <% end %>
 
-
 <hr>
 
-<% if @current_user != nil %>
+<% if @current_user == photo_owner %>
 <div>
   <div>
     <div>
@@ -124,37 +107,6 @@
 
         <textarea id="caption_box" name="query_caption"><%= @the_photo.caption %></textarea>
       </div>
-
-      <!--<div>
-        <label for="comments_count_box">
-          Comments count
-        </label>
-
-        <input type="text" id="comments_count_box" name="query_comments_count" value="<%= @the_photo.comments_count %>">
-      </div>
-
-      <div>
-        <label for="image_box">
-          Image
-        </label>
-
-        <input type="text" id="image_box" name="query_image" value="<%= @the_photo.image %>">
-      </div>
-
-      <div>
-        <label for="image_box">
-          Image URL
-        </label>
-        <input type="file" id="image_box" name="query_image" class="form-control">
-      </div>
-
-      <div>
-        <input type="hidden" id="likes_count_box" name="query_likes_count" value="<%= @the_photo.likes_count %>">
-      </div
-
-      <div>
-        <input type="hidden" id="owner_id_box" name="query_owner_id" value="<%= @the_photo.owner_id %>">
-      </div>-->
 
       <button>
         Update photo
@@ -172,8 +124,9 @@
     </a>
   </dd>
 </dl>
-
 <hr>
+<% end %>
+
 
 <h2>Comments</h2>
 
@@ -184,24 +137,26 @@
     <th>Posted</th>
   </tr>
 
-      <%# matching_comments = Comment.where({ :id => @the_photo.id }) %>
-
-    <%# the_comment = matching_comments.at(0) %>
-
+    <!-- bring photo comments from other users -->
+    <% matching_comments = Comment.where({ :photo_id => @the_photo.id }) %>
+    <!-- iterate through comments -->
+    <% matching_comments.each do |a_comment|%>
     <tr>
       <td>
-        <%#= the_comment.author_id%>
+        <!-- bring comment author's user name -->
+        <% comment_author = User.where({ :id => a_comment.author_id }).at(0) %>
+        <%= comment_author.username %>
       </td>
 
       <td>
-
-        <%#= the_comment.body %>
+        <%= a_comment.body %>
       </td>
 
       <td>
-        <%#= time_ago_in_words(the_comment.created_at) %> ago
+        <%= time_ago_in_words(a_comment.created_at) %> ago
       </td>
     </tr>  
+<% end %>
 </table>
 
 <hr>
@@ -209,14 +164,12 @@
 <h3>Add a new comment</h3>
 
 <form action="/insert_comment" method="post">
-  <input type="hidden" value="<%#= the_comment.author_id %>" name="query_author_id">
+  <input type="hidden" value="<%= @current_user.id %>" name="query_author_id">
 
   <label for="browser_comment">Comment</label>
-  <textarea id="browser_comment" value="<%#= @the_comment.body %>" name="query_body" placeholder="Enter a comment..."></textarea>
+  <textarea id="browser_comment" value="<%#= @current_user.body %>" name="query_body" placeholder="Enter a comment..."></textarea>
 
-  <input type="hidden" value="<%#= @the_comment.photo_id %>" name="query_photo_id">
+  <input type="hidden" value="<%#= @the_photo.photo_id %>" name="query_photo_id">
 
   <button>Add comment</button>
 </form>
-
-<% end %>
