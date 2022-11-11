@@ -68,36 +68,43 @@
       <dt>
         Fans
       </dt>
+
+      <dd>
     <!-- bring likes for this photo -->  
     <% photo_likes = Like.where({ :photo_id => @the_photo.id }) %>  
     <!-- iterate through liked photos -->  
     <% photo_likes.each do |a_liked_photo| %>
 
-      <!-- bring fans/likes from table to pull user names for likes -->
-      <% fan = User.where({ :id => a_liked_photo.fan_id }).at(0) %>
-      <dd>
+    <!-- bring fans/likes from table to pull user names for likes -->
+    <% fan = User.where({ :id => a_liked_photo.fan_id }).at(0) %>
         <%= fan.username %>
-      </dd>
       <% end %>
+      </dd>
     </dl>
   </div>
 </div>
 
 <hr>
 
+<!-- bring likes from current user to delete -->
+<% matching_likes = Like.where({ :photo_id => @the_photo.id }).where({ :fan_id => @current_user}).at(0) %>
+
+<% if matching_likes == nil %>
 <div>
   <dt>Add a fan</dt>
   <dd>
     <form action="/insert_like" method="post">
-      <input type="hidden" value="747" name="query_photo_id">
+      <input type="hidden" value="<%= @the_photo.id %>" name="query_photo_id">
+      <input type="hidden" value="<%= @current_user.id %>" name="query_fan_id">
       <button>Like</button>
     </form>
   </dd>
-
+<% else %>
   <dd>
-    <a href="/delete_like/4223">Unlike</a>
+    <a href="/delete_like/<%= matching_likes.id %>">Unlike</a>
   </dd>
 </div>
+<% end %>
 
 
 <hr>
