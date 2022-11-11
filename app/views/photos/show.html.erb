@@ -131,15 +131,15 @@
         </label>
 
         <input type="text" id="comments_count_box" name="query_comments_count" value="<%= @the_photo.comments_count %>">
-      </div>-->
+      </div>
 
-      <!--<div>
+      <div>
         <label for="image_box">
           Image
         </label>
 
         <input type="text" id="image_box" name="query_image" value="<%= @the_photo.image %>">
-      </div>-->
+      </div>
 
       <div>
         <label for="image_box">
@@ -150,11 +150,11 @@
 
       <div>
         <input type="hidden" id="likes_count_box" name="query_likes_count" value="<%= @the_photo.likes_count %>">
-      </div>
+      </div
 
       <div>
         <input type="hidden" id="owner_id_box" name="query_owner_id" value="<%= @the_photo.owner_id %>">
-      </div>
+      </div>-->
 
       <button>
         Update photo
@@ -184,19 +184,22 @@
     <th>Posted</th>
   </tr>
 
+      <%# matching_comments = Comment.where({ :id => @the_photo.id }) %>
+
+    <%# the_comment = matching_comments.at(0) %>
+
     <tr>
       <td>
-        <%# a_comment.author_id%>
-        <%#= @the_comment.author_id %>
+        <%#= the_comment.author_id%>
       </td>
 
       <td>
 
-        <%#= @the_comment.body %>
+        <%#= the_comment.body %>
       </td>
 
       <td>
-        <%#= time_ago_in_words(@the_comment.created_at) %> ago
+        <%#= time_ago_in_words(the_comment.created_at) %> ago
       </td>
     </tr>  
 </table>
@@ -206,10 +209,12 @@
 <h3>Add a new comment</h3>
 
 <form action="/insert_comment" method="post">
-  <input type="hidden" value="747" name="query_photo_id">
-  
+  <input type="hidden" value="<%#= the_comment.author_id %>" name="query_author_id">
+
   <label for="browser_comment">Comment</label>
-  <textarea id="browser_comment" name="query_body" placeholder="Enter a comment..."></textarea>
+  <textarea id="browser_comment" value="<%#= @the_comment.body %>" name="query_body" placeholder="Enter a comment..."></textarea>
+
+  <input type="hidden" value="<%#= @the_comment.photo_id %>" name="query_photo_id">
 
   <button>Add comment</button>
 </form>

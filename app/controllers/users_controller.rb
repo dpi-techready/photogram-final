@@ -49,5 +49,60 @@ class UsersController < ApplicationController
   else
       render({ :template => "users/show.html.erb" })
     end
-  end    
+  end
+  
+  def liked_photos
+    # the_id = params.fetch("path_id")
+    the_username = params.fetch("path_username")
+
+    # the_id = User.where({ :username => the_username })
+    matching_users = User.where({ :username => the_username })
+
+    # matching_users = User.where({ :id => the_id })
+
+    @the_user = matching_users.at(0)
+
+    # # bring data from follow liked photos to render here
+    matching_follow_requests = FollowRequest.where({ :sender_id => @current_user.id , :recipient_id => @the_user.id })
+    # narrow down to the specific request
+    a_follow_request = matching_follow_requests.at(0)
+    render({ :template => "users/liked_photos.html.erb" })
+  end
+  
+  def feed
+    # the_id = params.fetch("path_id")
+    the_username = params.fetch("path_username")
+
+    # the_id = User.where({ :username => the_username })
+    matching_users = User.where({ :username => the_username })
+
+    # matching_users = User.where({ :id => the_id })
+
+    @the_user = matching_users.at(0)
+
+    # # bring data from feed to render here
+    matching_follow_requests = FollowRequest.where({ :sender_id => @current_user.id , :recipient_id => @the_user.id })
+    # narrow down to the specific request
+    a_follow_request = matching_follow_requests.at(0)
+    render({ :template => "users/feed.html.erb" })
+  end
+  
+  def discover
+    # the_id = params.fetch("path_id")
+    the_username = params.fetch("path_username")
+
+    # the_id = User.where({ :username => the_username })
+    matching_users = User.where({ :username => the_username })
+
+    # matching_users = User.where({ :id => the_id })
+
+    @the_user = matching_users.at(0)
+
+    # # bring data from discover to render here
+    matching_follow_requests = FollowRequest.where({ :sender_id => @current_user.id , :recipient_id => @the_user.id })
+    # narrow down to the specific request
+    a_follow_request = matching_follow_requests.at(0)
+    render({ :template => "users/discover.html.erb" })
+  end     
+
 end   

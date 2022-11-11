@@ -1,9 +1,6 @@
 Rails.application.routes.draw do
   # Routes for the Like resource:
 
-  # HOME
-  get("/", { :controller => "users", :action => "index" })
-
   # CREATE
   post("/insert_like", { :controller => "likes", :action => "create" })
           
@@ -61,6 +58,9 @@ Rails.application.routes.draw do
 
   # Routes for the User account:
 
+  # HOME
+  get("/", { :controller => "users", :action => "index" })
+
   # READ
   get("/users", { :controller => "users", :action => "index" })
 
@@ -68,6 +68,12 @@ Rails.application.routes.draw do
 
   # changed url to point at user names instead of id
   get("/users/:path_username", { :controller => "users", :action => "show" })
+
+  get("/users/:path_username/liked_photos", { :controller => "users", :action => "liked_photos" })
+
+  get("/users/:path_username/feed", { :controller => "users", :action => "feed" })
+
+  get("/users/:path_username/discover", { :controller => "users", :action => "discover" })
 
   # SIGN UP FORM
   get("/user_sign_up", { :controller => "user_authentication", :action => "sign_up_form" })        
