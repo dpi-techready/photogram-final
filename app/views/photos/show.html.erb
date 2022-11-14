@@ -46,7 +46,10 @@
         Comments count
       </dt>
       <dd>
-        <%= @the_photo.comments_count %>
+        <!-- bring comments to render -->
+        <% matching_comments = Comment.where({ :photo_id => @the_photo.id }) %>
+
+        <%= matching_comments.count %>
       </dd>
 
       <dt>
@@ -167,9 +170,9 @@
   <input type="hidden" value="<%= @current_user.id %>" name="query_author_id">
 
   <label for="browser_comment">Comment</label>
-  <textarea id="browser_comment" value="<%#= @current_user.body %>" name="query_body" placeholder="Enter a comment..."></textarea>
+  <textarea id="browser_comment" name="query_body" placeholder="Enter a comment..."></textarea>
 
-  <input type="hidden" value="<%#= @the_photo.photo_id %>" name="query_photo_id">
+  <input type="hidden" value="<%= @the_photo.id %>" name="query_photo_id">
 
   <button>Add comment</button>
 </form>

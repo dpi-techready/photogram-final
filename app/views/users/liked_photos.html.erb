@@ -34,10 +34,18 @@
   </ul>
 </nav>
 
-<!-- bring photos to user pages and render -->
-<% the_photos = Photo.where({ :owner_id => @the_user.id })%>
+<!-- initialize an empty photo array -->
+<% the_photos = [] %>
+<!-- bring likes for this photo -->  
+<% photo_likes = Like.where({ :fan_id => @the_user.id }) %>  
+<!-- iterate through liked photos -->  
+<% photo_likes.each do |a_liked_photo| %>
 
-<h2>Liked photos (<%= the_photos.count %>)</h2>
+<!-- bring photos to user pages and render -->
+<% the_photos.push(Photo.where({ :id => a_liked_photo.photo_id }).at(0)) %>
+<% end %>
+
+<h2>Liked photos (<%= photo_likes.count %>)</h2>
 
 <table border="1">
 
@@ -75,7 +83,10 @@
     </td>
 
     <td>
-      <%= @the_user.username %>
+      <!-- bring username for owner -->
+      <% u = User.where({ :id => a_photo.owner_id }).at(0) %>
+
+      <%= u.username %>
     </td>
 
     <td>
@@ -94,7 +105,7 @@
       <a href="/photos/<%= a_photo.id %>">Show details</a>
     </td>
 
-    <% end %>
+<% end %>  
 
   </tr>
 

@@ -34,10 +34,24 @@
   </ul>
 </nav>
 
-<!-- bring photos to user pages and render -->
-<% the_photos = Photo.where({ :owner_id => @the_user.id })%>
+<!-- initialize an empty photo array -->
+<% the_photos_count = [] %>
+<!-- bring likes for this photo -->  
+<% following = FollowRequest.where({ :sender_id => @the_user.id, :status => "accepted" }) %>  
+<!-- iterate through liked photos -->  
+<% following.each do |a_followed_request| %>
 
-<h2>Feed (<%= the_photos.count %>)</h2>
+<!-- bring photos to user pages and render -->
+<!-- loop over the_photos and display -->
+<% the_photos = Photo.where({ :owner_id => a_followed_request.recipient_id }) %>
+<% the_photos_count.push(the_photos.length)%>
+<% the_photos.each do |a_photo| %>
+<%# the_photos.push(Photo.where({ :owner_id => a_followed_request.recipient_id }).at(0)) %>
+<%# the_photos.push(Photo.where({ :owner_id => a_followed_request.recipient_id }).map_relation_to_array(:photo_id)) %>
+  <% end %>
+<% end %>
+
+<h2>Feed (<%= the_photos_count.sum %>)</h2>
 
 <table border="1">
 
@@ -65,8 +79,12 @@
     <th></th>
   </tr>
 
-<!-- iterate over all photos -->
+<!-- iterate over all photos, using .compact will get rid of nil results -->
+<%# the_photos.compact.each do |a_photo| %>
+<% following.each do |a_followed_request| %>
+<% the_photos = Photo.where({ :owner_id => a_followed_request.recipient_id }) %>
 <% the_photos.each do |a_photo| %>
+<%# one_photo = a_photo.first %>
 
   <tr>
 
@@ -75,7 +93,10 @@
     </td>
 
     <td>
-      <%= @the_user.username %>
+      <!-- bring username for owner -->
+      <% u = User.where({ :id => a_photo.owner_id }).at(0) %>
+
+      <%= u.username %>
     </td>
 
     <td>
@@ -95,7 +116,7 @@
     </td>
 
     <% end %>
-
+  <% end %>
   </tr>
 
 </table>

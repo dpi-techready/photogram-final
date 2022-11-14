@@ -34,8 +34,16 @@
   </ul>
 </nav>
 
+<!-- initialize an empty photo array -->
+<% the_photos = [] %>
+<!-- bring likes for this photo -->  
+<% photo_likes = Like.where({ :fan_id => the_following.id }) %>  
+<!-- iterate through liked photos -->  
+<% photo_likes.each do |a_liked_photo| %>
+
 <!-- bring photos to user pages and render -->
-<% the_photos = Photo.where({ :owner_id => @the_user.id })%>
+<% the_photos = (Photo.where({ :id => a_liked_photo.photo_id }).at(0)) %>
+<% end %>
 
 <h2>Discover (<%= the_photos.count %>)</h2>
 
@@ -65,8 +73,8 @@
     <th></th>
   </tr>
 
-<!-- iterate over all photos -->
-<% the_photos.each do |a_photo| %>
+<!-- iterate over all photos, using .compact will get rid of nil results -->
+<% the_photos.compact.each do |a_photo| %>
 
   <tr>
 
@@ -75,7 +83,10 @@
     </td>
 
     <td>
-      <%= @the_user.username %>
+      <!-- bring username for owner -->
+      <% u = User.where({ :id => a_photo.owner_id }).at(0) %>
+
+      <%= u.username %>
     </td>
 
     <td>
